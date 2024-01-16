@@ -1,5 +1,7 @@
 package com.ameda.kevin.kafka.controller;
 
+import com.ameda.kevin.kafka.DTO.Worker;
+import com.ameda.kevin.kafka.producer.KafkaJsonProducer;
 import com.ameda.kevin.kafka.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/messages")
 @RequiredArgsConstructor
 public class MessagingController {
+    private final KafkaJsonProducer kafkaJsonProducer;
     private final KafkaProducer kafkaProducer;
 
     @PostMapping("/publish")
@@ -20,4 +23,11 @@ public class MessagingController {
         kafkaProducer.publishMessage(message);
         return new ResponseEntity<>("Queueing your message Kisevu...",HttpStatus.OK);
     }
+
+    @PostMapping("/send")
+    public ResponseEntity<?> sendMessage(@RequestBody Worker worker){
+        kafkaJsonProducer.sendMessage(worker);
+        return new ResponseEntity<>("Queueing your message Kisevu as Json...",HttpStatus.OK);
+    }
+
 }
